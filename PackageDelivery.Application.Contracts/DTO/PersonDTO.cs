@@ -1,7 +1,14 @@
-﻿namespace PackageDelivery.Repository.Contracts.DbModels.Parameters
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PackageDelivery.Application.Contracts.DTO
 {
-    public class PersonDbModel
+    public class PersonDTO
     {
+
         public long Id { get; set; }
         public string FirstName { get; set; }
         public string OtherNames { get; set; }
