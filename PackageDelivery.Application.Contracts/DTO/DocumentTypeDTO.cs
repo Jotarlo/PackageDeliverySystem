@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PackageDelivery.Application.Contracts.DTO
+namespace PackageDelivery.Application.DTO
 {
     public class DocumentTypeDTO
     {

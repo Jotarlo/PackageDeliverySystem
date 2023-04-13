@@ -1,4 +1,4 @@
-﻿namespace PackageDelivery.Repository.Contracts.DbModels.Parameters
+﻿namespace PackageDelivery.Repository.DbModels.Parameters
 {
     public class PersonDbModel
     {

@@ -1,6 +1,6 @@
 ﻿
-using PackageDelivery.Application.Contracts.DTO;
-using PackageDelivery.Repository.Contracts.DbModels.Parameters;
+using PackageDelivery.Application.DTO;
+using PackageDelivery.Repository.DbModels.Parameters;
 using System.Collections.Generic;
 
 namespace PackageDelivery.Application.Implementation.Mappers.Parameters

@@ -1,5 +1,5 @@
 ﻿
-using PackageDelivery.Repository.Contracts.DbModels.Parameters;
+using PackageDelivery.Repository.DbModels.Parameters;
 using PackageDelivery.Repository.Implementation.DataModel;
 using System.Collections.Generic;
 
