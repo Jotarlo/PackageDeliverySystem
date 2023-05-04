@@ -26,7 +26,7 @@ namespace PackageDelivery.GUI.Implementation.Mappers.Parameters
         }
 
         public override DocumentTypeDTO ModelToDTOMapper(DocumentTypeModel input)
-        {
+            {
             return new DocumentTypeDTO()
             {
                 Id = input.Id,

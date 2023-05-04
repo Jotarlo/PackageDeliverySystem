@@ -1,9 +1,9 @@
 ﻿using PackageDelivery.Application.Contracts.Interfaces.Parameters;
 using PackageDelivery.Application.DTO;
 using PackageDelivery.Application.Implementation.Implementation.Parameters;
+using PackageDelivery.GUI.Helpers;
 using PackageDelivery.GUI.Implementation.Mappers.Parameters;
 using PackageDelivery.GUI.Models.Parameters;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Mvc;
@@ -57,11 +57,16 @@ namespace PackageDelivery.GUI.Controllers.Parameters
                 DocumentTypeDTO response = _app.createRecord(mapper.ModelToDTOMapper(documentTypeModel));
                 if (response != null)
                 {
+                    ViewBag.ClassName = ActionMessages.successClass;
+                    ViewBag.Message = ActionMessages.successMessage;
                     return RedirectToAction("Index");
                 }
+                ViewBag.ClassName = ActionMessages.warningClass;
+                ViewBag.Message = ActionMessages.alreadyExistsMessage;
                 return View(documentTypeModel);
             }
-            ViewBag.ErrorMessage = "Error ejecutando la acción";
+            ViewBag.ClassName = ActionMessages.warningClass;
+            ViewBag.Message = ActionMessages.errorMessage;
             return View(documentTypeModel);
         }
 
