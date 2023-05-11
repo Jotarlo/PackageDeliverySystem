@@ -3,6 +3,8 @@ using PackageDelivery.Application.DTO;
 using PackageDelivery.Application.Implementation.Implementation.Parameters;
 using PackageDelivery.GUI.Implementation.Mappers.Parameters;
 using PackageDelivery.GUI.Models.Parameters;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Mvc;
 
@@ -11,11 +13,14 @@ namespace PackageDelivery.GUI.Controllers.Parameters
     public class PersonController : Controller
     {
         private IPersonApplication _app = new PersonImpApplication();
-
+        private IDocumentTypeApplication _dtApp = new DocumentTypeImpApplication();
         // GET: Person
         public ActionResult Index(string filter = "")
         {
-            return View(_app.getRecordsList(filter));
+            var dtoList = _app.getRecordsList(filter);
+            PersonGUIMapper mapper = new PersonGUIMapper();
+            IEnumerable<PersonModel> model = mapper.DTOToModelMapper(dtoList);
+            return View(model);
         }
 
         // GET: Person/Details/5
@@ -26,18 +31,23 @@ namespace PackageDelivery.GUI.Controllers.Parameters
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             PersonGUIMapper mapper = new PersonGUIMapper();
-            PersonModel documentTypeModel = mapper.DTOToModelMapper(_app.getRecordById(id.Value));
-            if (documentTypeModel == null)
+            PersonModel personModel = mapper.DTOToModelMapper(_app.getRecordById(id.Value));
+            if (personModel == null)
             {
                 return HttpNotFound();
             }
-            return View(documentTypeModel);
+            return View(personModel);
         }
 
         // GET: Person/Create
         public ActionResult Create()
         {
-            return View();
+            IEnumerable<DocumentTypeDTO> dtList = this._dtApp.getRecordsList(string.Empty);
+            DocumentTypeGUIMapper mapper = new DocumentTypeGUIMapper();
+            PersonModel model = new PersonModel() { 
+                DocumentTypeList = mapper.DTOToModelMapper(dtList)
+            };
+            return View(model);
         }
 
         // POST: Person/Create
@@ -45,20 +55,20 @@ namespace PackageDelivery.GUI.Controllers.Parameters
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,OtherNames,FirstLastname,SecondLastname,IdentificationNumber,Cellphone,Email,IdentificationType")] PersonModel documentTypeModel)
+        public ActionResult Create([Bind(Include = "Id,FirstName,OtherNames,FirstLastname,SecondLastname,IdentificationNumber,Cellphone,Email,IdentificationType")] PersonModel personModel)
         {
             if (ModelState.IsValid)
             {
                 PersonGUIMapper mapper = new PersonGUIMapper();
-                PersonDTO response = _app.createRecord(mapper.ModelToDTOMapper(documentTypeModel));
+                PersonDTO response = _app.createRecord(mapper.ModelToDTOMapper(personModel));
                 if (response != null)
                 {
                     return RedirectToAction("Index");
                 }
-                return View(documentTypeModel);
+                return View(personModel);
             }
             ViewBag.ErrorMessage = "Error ejecutando la acción";
-            return View(documentTypeModel);
+            return View(personModel);
         }
 
         // GET: Person/Edit/5
@@ -69,12 +79,17 @@ namespace PackageDelivery.GUI.Controllers.Parameters
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             PersonGUIMapper mapper = new PersonGUIMapper();
-            PersonModel documentTypeModel = mapper.DTOToModelMapper(_app.getRecordById(id.Value));
-            if (documentTypeModel == null)
+            PersonModel personModel = mapper.DTOToModelMapper(_app.getRecordById(id.Value));
+            IEnumerable<DocumentTypeDTO> dtList = this._dtApp.getRecordsList(string.Empty);
+            DocumentTypeGUIMapper dtMapper = new DocumentTypeGUIMapper();
+
+
+            personModel.DocumentTypeList = dtMapper.DTOToModelMapper(dtList);
+            if (personModel == null)
             {
                 return HttpNotFound();
             }
-            return View(documentTypeModel);
+            return View(personModel);
         }
 
         // POST: Person/Edit/5
@@ -82,19 +97,19 @@ namespace PackageDelivery.GUI.Controllers.Parameters
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,OtherNames,FirstLastname,SecondLastname,IdentificationNumber,Cellphone,Email,IdentificationType")] PersonModel documentTypeModel)
+        public ActionResult Edit([Bind(Include = "Id,FirstName,OtherNames,FirstLastname,SecondLastname,IdentificationNumber,Cellphone,Email,IdentificationType")] PersonModel personModel)
         {
             if (ModelState.IsValid)
             {
                 PersonGUIMapper mapper = new PersonGUIMapper();
-                PersonDTO response = _app.updateRecord(mapper.ModelToDTOMapper(documentTypeModel));
+                PersonDTO response = _app.updateRecord(mapper.ModelToDTOMapper(personModel));
                 if (response != null)
                 {
                     return RedirectToAction("Index");
                 }
             }
             ViewBag.ErrorMessage = "Error ejecutando la acción";
-            return View(documentTypeModel);
+            return View(personModel);
         }
 
         // GET: Person/Delete/5
@@ -105,12 +120,12 @@ namespace PackageDelivery.GUI.Controllers.Parameters
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             PersonGUIMapper mapper = new PersonGUIMapper();
-            PersonModel documentTypeModel = mapper.DTOToModelMapper(_app.getRecordById(id.Value));
-            if (documentTypeModel == null)
+            PersonModel personModel = mapper.DTOToModelMapper(_app.getRecordById(id.Value));
+            if (personModel == null)
             {
                 return HttpNotFound();
             }
-            return View(documentTypeModel);
+            return View(personModel);
         }
 
         // POST: Person/Delete/5

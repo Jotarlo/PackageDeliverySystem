@@ -19,7 +19,8 @@ namespace PackageDelivery.Application.Implementation.Mappers.Parameters
                 Cellphone = input.Cellphone,
                 Email = input.Email,
                 IdentificationNumber = input.IdentificationNumber,
-                IdentificationType = input.IdentificationType
+                IdentificationType = input.IdentificationType,
+                DocumentTypeName = input.DocumentTypeName
             };
         }
 

@@ -107,6 +107,7 @@
     <Compile Include="DataModel\vehiculo.cs">
       <DependentUpon>PackageDeliveryDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Implementation\Parameters\PersonImpRepository.cs" />
     <Compile Include="Implementation\Parameters\DocumentTypeImpRepository.cs" />
     <Compile Include="Mappers\DbModelMapperBase.cs" />
     <Compile Include="Mappers\Parameters\PersonRepositoryMapper.cs" />
