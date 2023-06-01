@@ -1,10 +1,12 @@
-﻿using PackageDelivery.Application.Contracts.Interfaces.Parameters;
+﻿using Microsoft.Reporting.WebForms;
+using PackageDelivery.Application.Contracts.Interfaces.Parameters;
 using PackageDelivery.Application.DTO;
 using PackageDelivery.Application.Implementation.Implementation.Parameters;
 using PackageDelivery.GUI.Implementation.Mappers.Parameters;
 using PackageDelivery.GUI.Models.Parameters;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
@@ -44,7 +46,8 @@ namespace PackageDelivery.GUI.Controllers.Parameters
         {
             IEnumerable<DocumentTypeDTO> dtList = this._dtApp.getRecordsList(string.Empty);
             DocumentTypeGUIMapper mapper = new DocumentTypeGUIMapper();
-            PersonModel model = new PersonModel() { 
+            PersonModel model = new PersonModel()
+            {
                 DocumentTypeList = mapper.DTOToModelMapper(dtList)
             };
             return View(model);
@@ -140,6 +143,42 @@ namespace PackageDelivery.GUI.Controllers.Parameters
             }
             ViewBag.ErrorMessage = "Error ejecutando la acción";
             return View();
+        }
+
+
+
+        public ActionResult Person_Report(string format = "PDF")
+        {
+            var list = _app.getRecordsList(string.Empty);
+            PersonGUIMapper mapper = new PersonGUIMapper();
+            List<PersonModel> recordsList = mapper.DTOToModelMapper(list).ToList();
+            string reportPath = Server.MapPath("~/Reports/rdlcFiles/PeopleReport.rdlc");
+            //List<string> dataSets = new List<string> { "CustomerList" };
+            LocalReport lr = new LocalReport();
+
+            lr.ReportPath = reportPath;
+            lr.EnableHyperlinks = true;
+
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderedBytes;
+            string mimeType, encoding, fileNameExtension;
+
+            ReportDataSource res = new ReportDataSource("PeopleList", recordsList);
+            lr.DataSources.Add(res);
+
+
+            renderedBytes = lr.Render(
+            format,
+            string.Empty,
+            out mimeType,
+            out encoding,
+            out fileNameExtension,
+            out streams,
+            out warnings
+            );
+
+            return File(renderedBytes, mimeType);
         }
     }
 }
